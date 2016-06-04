@@ -24,6 +24,11 @@ public class GoogleCrawler implements Crawler {
     }
 
     @Override
+    public String getName() {
+        return "Google";
+    }
+
+    @Override
     public List<SearchResult> search(String searchPhrase) throws IOException, JSONException {
         List<SearchResult> resultList = new ArrayList<>();
 

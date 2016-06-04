@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface Crawler {
 
+    String getName();
     List<SearchResult> search(String phrase) throws IOException, JSONException;
 
 }

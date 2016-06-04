@@ -23,6 +23,11 @@ public class BingCrawler implements Crawler {
     }
 
     @Override
+    public String getName() {
+        return "Bing";
+    }
+
+    @Override
     public List<SearchResult> search(String searchPhrase) throws IOException, JSONException {
         List<SearchResult> resultList = new ArrayList<>();
 
