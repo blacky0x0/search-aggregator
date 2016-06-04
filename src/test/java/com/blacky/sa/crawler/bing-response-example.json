@@ -1,0 +1,19 @@
+{
+  "d": {
+    "results": [
+      {
+        "__metadata": {
+          "uri": "https://api.datamarket.azure.com/Data.ashx/Bing/Search/Web?Query=\u0027what is spelunking\u0027&$skip=0&$top=1",
+          "type": "WebResult"
+        },
+        "ID": "ef7abdf1-0da8-48d3-99cd-4821f33c29ec",
+        "Title": "Urban Dictionary: spelunking",
+        "Description": "The origin of all the other definitions for spelunking noun: The act of exploring a cave",
+        "DisplayUrl": "www.urbandictionary.com/define.php?term=spelunking",
+        "Url": "http://www.urbandictionary.com/define.php?term=spelunking"
+      }
+    ],
+    "__next": "https://api.datamarket.azure.com/Data.ashx/Bing/Search/Web?Query=\u0027what%20is%20spelunking\u0027&$skip=1&$top=1"
+  }
+}
+
