@@ -20,32 +20,16 @@ public class SearchResult {
         return position;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public String getSearchEngine() {
         return searchEngine;
-    }
-
-    public void setSearchEngine(String searchEngine) {
-        this.searchEngine = searchEngine;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getUrl() {
         return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     @Override
