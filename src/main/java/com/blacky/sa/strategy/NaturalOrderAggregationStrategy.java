@@ -7,7 +7,7 @@ public class NaturalOrderAggregationStrategy implements AggregationStrategy{
 
     @Override
     public List<SearchResult> aggregate(List<List<SearchResult>> searchResultList) {
-        if (Objects.isNull(searchResultList)) return Collections.emptyList();
+        if (Objects.isNull(searchResultList) || searchResultList.isEmpty()) return Collections.emptyList();
 
         List<SearchResult> resultList = new ArrayList<>();
 
