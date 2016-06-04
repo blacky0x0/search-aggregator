@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -18,13 +17,10 @@ public class GoogleCrawlerTest {
     public void parseValidJsonResponse() throws Exception {
         String apiKey = "api_key";
         String cx = "custom_search_engine_id";
-        GoogleCrawler searchEngine = new GoogleCrawler(apiKey, cx);
-        GoogleCrawler spy = spy(searchEngine);
+        GoogleCrawler spy = spy(new GoogleCrawler(apiKey, cx));
+        String jsonResponse = "{\"items\":[{\"title\":\"Urban Dictionary: spelunking\",\"link\": \"http://www.urbandictionary.com/define.php?term=spelunking\"}]}";
 
-        String s = "{\"items\":[{\"title\":\"Urban Dictionary: spelunking\",\"link\": \"http://www.urbandictionary.com/define.php?term=spelunking\"}]}";
-        ByteArrayInputStream ba = new ByteArrayInputStream(s.getBytes());
-
-        when(spy.getStream(any())).thenReturn(ba);
+        doReturn(jsonResponse).when(spy).getResponse(any());
 
         List<SearchResult> serp = spy.search("what is spelunking");
         SearchResult result = serp.get(0);

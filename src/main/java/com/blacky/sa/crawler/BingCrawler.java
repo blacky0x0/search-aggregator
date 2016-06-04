@@ -34,34 +34,36 @@ public class BingCrawler implements Crawler {
         String encodedSearchPhrase = URLEncoder.encode(searchPhrase, StandardCharsets.UTF_8.name());
         String bingUrl = String.format(urlPattern, size, encodedSearchPhrase);
 
-        URLConnection connection = new URL(bingUrl).openConnection();
-        connection.setRequestProperty("Authorization", "Basic " + apiKeyEnc);
+        String jsonResponse = getResponse(bingUrl);
 
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(getStream(connection.getInputStream())))) {
-            String inputLine;
-            StringBuilder response = new StringBuilder();
+        JSONObject json = new JSONObject(jsonResponse);
+        JSONObject d = json.getJSONObject("d");
+        JSONArray results = d.getJSONArray("results");
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-
-            JSONObject json = new JSONObject(response.toString());
-            JSONObject d = json.getJSONObject("d");
-            JSONArray results = d.getJSONArray("results");
-
-            for (int i = 0; i < results.length(); i++) {
-                JSONObject result = results.getJSONObject(i);
-                String resultUrl = result.getString("Url");
-                String title = result.getString("Title");
-                resultList.add(new SearchResult(i + 1, "Bing", title, resultUrl));
-            }
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject result = results.getJSONObject(i);
+            String resultUrl = result.getString("Url");
+            String title = result.getString("Title");
+            resultList.add(new SearchResult(i + 1, "Bing", title, resultUrl));
         }
 
         return resultList;
     }
 
-    public InputStream getStream(InputStream is) {
-        return is;
+    public String getResponse(String url) throws IOException {
+        URLConnection connection = new URL(url).openConnection();
+        connection.setRequestProperty("Authorization", "Basic " + apiKeyEnc);
+
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+        }
+
+        return response.toString();
     }
 
     public int getSize() {

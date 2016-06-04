@@ -5,8 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
-import java.io.ByteArrayInputStream;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -18,12 +16,10 @@ public class BingCrawlerTest {
     @Test
     public void parseValidJsonResponse() throws Exception {
         String apiKey = "api_key";
-        BingCrawler searchEngine = new BingCrawler(apiKey);
-        BingCrawler spy = spy(searchEngine);
+        BingCrawler spy = spy(new BingCrawler(apiKey));
+        String jsonResponse = "{\"d\":{\"results\":[{\"Title\":\"Caving - Wikipedia\",\"Url\":\"https://en.wikipedia.org/wiki/Caving\"}]}}";
 
-        String s = "{\"d\":{\"results\":[{\"Title\":\"Caving - Wikipedia\",\"Url\":\"https://en.wikipedia.org/wiki/Caving\"}]}}";
-        ByteArrayInputStream ba = new ByteArrayInputStream(s.getBytes());
-        when(spy.getStream(any())).thenReturn(ba);
+        doReturn(jsonResponse).when(spy).getResponse(any());
 
         List<SearchResult> serp = spy.search("what is spelunking");
         SearchResult result = serp.get(0);

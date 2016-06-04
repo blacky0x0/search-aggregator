@@ -35,33 +35,34 @@ public class GoogleCrawler implements Crawler {
         String encodedSearchPhrase = URLEncoder.encode(searchPhrase, StandardCharsets.UTF_8.name());
         String googleUrl = String.format(urlPattern, apiKey, cx, size, encodedSearchPhrase);
 
-        URL url = new URL(googleUrl);
-        URLConnection connection = url.openConnection();
+        String jsonResponse = getResponse(googleUrl);
 
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(getStream(connection.getInputStream())))) {
-            String inputLine;
-            StringBuilder response = new StringBuilder();
+        JSONObject json = new JSONObject(jsonResponse);
+        JSONArray items = json.getJSONArray("items");
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-
-            JSONObject json = new JSONObject(response.toString());
-            JSONArray items = json.getJSONArray("items");
-
-            for (int i = 0; i < items.length(); i++) {
-                JSONObject result = items.getJSONObject(i);
-                String resultUrl = result.getString("link");
-                String title = result.getString("title");
-                resultList.add(new SearchResult(i + 1, "Google", title, resultUrl));
-            }
+        for (int i = 0; i < items.length(); i++) {
+            JSONObject result = items.getJSONObject(i);
+            String resultUrl = result.getString("link");
+            String title = result.getString("title");
+            resultList.add(new SearchResult(i + 1, "Google", title, resultUrl));
         }
 
         return resultList;
     }
 
-    public InputStream getStream(InputStream is) {
-        return is;
+    public String getResponse(String url) throws IOException {
+        URLConnection connection = new URL(url).openConnection();
+
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+        }
+
+        return response.toString();
     }
 
     public int getSize() {
