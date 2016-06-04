@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 
-import java.io.*;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
@@ -26,10 +25,8 @@ public class BingCrawlerTest {
         ByteArrayInputStream ba = new ByteArrayInputStream(s.getBytes());
         when(spy.getStream(any())).thenReturn(ba);
 
-        BufferedReader buf = mock(BufferedReader.class);
-
-        List<SearchResult> list = spy.search("what is spelunking");
-        SearchResult result = list.get(0);
+        List<SearchResult> serp = spy.search("what is spelunking");
+        SearchResult result = serp.get(0);
 
         assertEquals(1, result.getPosition());
         assertEquals("Bing", result.getSearchEngine());

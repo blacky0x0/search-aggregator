@@ -19,7 +19,7 @@ public class SearchAggregator {
                              List<Crawler> searchEngineList,
                              AggregationStrategy aggregationStrategy) throws IOException, JSONException {
 
-        List<List<SearchResult>> lists = new ArrayList<>();
+        List<List<SearchResult>> serps = new ArrayList<>();
         Map<Crawler, FutureTask<List<SearchResult>>> tasks = new HashMap<>();
 
         for (Crawler crawler : searchEngineList) {
@@ -30,13 +30,13 @@ public class SearchAggregator {
 
         for (Crawler crawler : tasks.keySet()) {
             try {
-                lists.add(tasks.get(crawler).get(5, TimeUnit.SECONDS));
+                serps.add(tasks.get(crawler).get(5, TimeUnit.SECONDS));
             } catch (TimeoutException | InterruptedException | ExecutionException e ) {
                 Logger.getAnonymousLogger().warning("Skip crawling from " + crawler.getName());
             }
         }
 
-        return aggregationStrategy.aggregate(lists);
+        return aggregationStrategy.aggregate(serps);
     }
 
     static class Crawling implements Callable<List<SearchResult>> {

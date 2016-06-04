@@ -28,13 +28,9 @@ public class SearchAggregatorTest {
             add(googleCrawler);
         }};
 
-        List<SearchResult> results = SearchAggregator.searchPhrase("abc", crawlers, new NaturalOrderAggregationStrategy());
+        List<SearchResult> aggregatedSerp = SearchAggregator.searchPhrase("abc", crawlers, new NaturalOrderAggregationStrategy());
 
-        for (SearchResult sr : results) {
-            System.out.println(sr);
-        }
-
-        assertEquals(20, results.size());
+        assertEquals(20, aggregatedSerp.size());
     }
 
 }

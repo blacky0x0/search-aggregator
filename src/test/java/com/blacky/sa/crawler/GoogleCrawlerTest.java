@@ -26,8 +26,8 @@ public class GoogleCrawlerTest {
 
         when(spy.getStream(any())).thenReturn(ba);
 
-        List<SearchResult> list = spy.search("what is spelunking");
-        SearchResult result = list.get(0);
+        List<SearchResult> serp = spy.search("what is spelunking");
+        SearchResult result = serp.get(0);
 
         assertEquals(1, result.getPosition());
         assertEquals("Google", result.getSearchEngine());

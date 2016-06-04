@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 public class RoundRobinAggregationStrategy implements AggregationStrategy {
 
     @Override
-    public List<SearchResult> aggregate(List<List<SearchResult>> searchResultList) {
-        if (Objects.isNull(searchResultList) || searchResultList.isEmpty()) return Collections.emptyList();
+    public List<SearchResult> aggregate(List<List<SearchResult>> serps) {
+        if (Objects.isNull(serps) || serps.isEmpty()) return Collections.emptyList();
 
         List<SearchResult> result = new RoundRobinArrayList<>();
 
-        for (List<SearchResult> list : searchResultList) {
-            result.addAll(list.stream().collect(Collectors.toList()));
+        for (List<SearchResult> serp : serps) {
+            result.addAll(serp.stream().collect(Collectors.toList()));
         }
 
         return result;

@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface AggregationStrategy {
 
-    List<SearchResult> aggregate(List<List<SearchResult>> searchResultList);
+    List<SearchResult> aggregate(List<List<SearchResult>> serps);
 
 }

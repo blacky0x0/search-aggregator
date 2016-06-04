@@ -22,16 +22,16 @@ public class RoundRobinAggregationStrategyTest {
     @Test
     public void checkRoundRobinBehaviour() throws Exception {
         RoundRobinAggregationStrategy robinStrategy = new RoundRobinAggregationStrategy();
-        List<List<SearchResult>> lists = new ArrayList<>();
-        List<SearchResult> list = new ArrayList<>();
+        List<List<SearchResult>> serps = new ArrayList<>();
+        List<SearchResult> serp = new ArrayList<>();
         SearchResult search = new SearchResult(1, "Google", "Title", "https://google.com");
         SearchResult search2 = new SearchResult(2, "Bing", "Title2", "https://bing.com");
 
-        list.add(search);
-        list.add(search2);
-        lists.add(list);
+        serp.add(search);
+        serp.add(search2);
+        serps.add(serp);
 
-        List<SearchResult> answer = robinStrategy.aggregate(lists);
+        List<SearchResult> answer = robinStrategy.aggregate(serps);
         Iterator<SearchResult> it = answer.iterator();
 
         assertEquals(1, it.next().getPosition());
