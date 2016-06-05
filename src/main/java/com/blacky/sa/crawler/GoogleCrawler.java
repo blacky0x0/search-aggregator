@@ -1,12 +1,15 @@
 package com.blacky.sa.crawler;
 
 import com.blacky.sa.crawler.parser.GoogleJsonParser;
+import com.blacky.sa.exception.CrawlingRuntimeException;
 import com.blacky.sa.model.SearchResult;
 import org.json.*;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GoogleCrawler implements Crawler {
     public static final String urlPattern = "https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&num=%d&q=%%27%s%%27";
@@ -30,24 +33,39 @@ public class GoogleCrawler implements Crawler {
     }
 
     @Override
-    public List<SearchResult> search(String searchPhrase) throws IOException, JSONException {
+    public List<SearchResult> search(String searchPhrase) {
+        String encodedSearchPhrase, formedUrl;
 
-        String encodedSearchPhrase = URLEncoder.encode(searchPhrase, StandardCharsets.UTF_8.name());
-        String googleUrl = String.format(urlPattern, apiKey, cx, size, encodedSearchPhrase);
+        try {
+            encodedSearchPhrase = URLEncoder.encode(searchPhrase, StandardCharsets.UTF_8.name());
+            formedUrl = String.format(urlPattern, apiKey, cx, size, encodedSearchPhrase);
+        } catch (UnsupportedEncodingException ex) {
+            String msg = "The UTF8 charset couldn't be found";
+            Logger.getAnonymousLogger().log(Level.WARNING, msg);
+            throw new CrawlingRuntimeException(msg, ex);
+        }
 
-        return GoogleJsonParser.parse(getResponse(googleUrl));
+        return GoogleJsonParser.parse(getResponse(formedUrl));
     }
 
-    public String getResponse(String url) throws IOException {
-        URLConnection connection = new URL(url).openConnection();
+    public String getResponse(String url) {
+        StringBuilder response;
 
-        StringBuilder response = new StringBuilder();
-        String inputLine;
+        try {
+            URLConnection connection = new URL(url).openConnection();
 
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+            response = new StringBuilder();
+            String inputLine;
+
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
             }
+        } catch (IOException ex) {
+            String msg = "GoogleCrawler couldn't crawl";
+            Logger.getAnonymousLogger().log(Level.WARNING, msg);
+            throw new CrawlingRuntimeException(msg, ex);
         }
 
         return response.toString();
