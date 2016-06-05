@@ -1,5 +1,6 @@
 package com.blacky.sa.crawler;
 
+import com.blacky.sa.crawler.parser.GoogleJsonParser;
 import com.blacky.sa.model.SearchResult;
 import org.json.*;
 import java.io.*;
@@ -30,24 +31,11 @@ public class GoogleCrawler implements Crawler {
 
     @Override
     public List<SearchResult> search(String searchPhrase) throws IOException, JSONException {
-        List<SearchResult> resultList = new ArrayList<>();
 
         String encodedSearchPhrase = URLEncoder.encode(searchPhrase, StandardCharsets.UTF_8.name());
         String googleUrl = String.format(urlPattern, apiKey, cx, size, encodedSearchPhrase);
 
-        String jsonResponse = getResponse(googleUrl);
-
-        JSONObject json = new JSONObject(jsonResponse);
-        JSONArray items = json.getJSONArray("items");
-
-        for (int i = 0; i < items.length(); i++) {
-            JSONObject result = items.getJSONObject(i);
-            String resultUrl = result.getString("link");
-            String title = result.getString("title");
-            resultList.add(new SearchResult(i + 1, "Google", title, resultUrl));
-        }
-
-        return resultList;
+        return GoogleJsonParser.parse(getResponse(googleUrl));
     }
 
     public String getResponse(String url) throws IOException {

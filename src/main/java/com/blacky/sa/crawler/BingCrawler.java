@@ -1,5 +1,6 @@
 package com.blacky.sa.crawler;
 
+import com.blacky.sa.crawler.parser.BingJsonParser;
 import com.blacky.sa.model.SearchResult;
 import org.json.*;
 import java.io.*;
@@ -29,25 +30,11 @@ public class BingCrawler implements Crawler {
 
     @Override
     public List<SearchResult> search(String searchPhrase) throws IOException, JSONException {
-        List<SearchResult> resultList = new ArrayList<>();
 
         String encodedSearchPhrase = URLEncoder.encode(searchPhrase, StandardCharsets.UTF_8.name());
         String bingUrl = String.format(urlPattern, size, encodedSearchPhrase);
 
-        String jsonResponse = getResponse(bingUrl);
-
-        JSONObject json = new JSONObject(jsonResponse);
-        JSONObject d = json.getJSONObject("d");
-        JSONArray results = d.getJSONArray("results");
-
-        for (int i = 0; i < results.length(); i++) {
-            JSONObject result = results.getJSONObject(i);
-            String resultUrl = result.getString("Url");
-            String title = result.getString("Title");
-            resultList.add(new SearchResult(i + 1, "Bing", title, resultUrl));
-        }
-
-        return resultList;
+        return BingJsonParser.parse(getResponse(bingUrl));
     }
 
     public String getResponse(String url) throws IOException {
