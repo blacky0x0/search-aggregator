@@ -1,5 +1,6 @@
 package com.blacky.sa.crawler.parser;
 
+import com.blacky.sa.exception.JsonParseRuntimeException;
 import com.blacky.sa.model.SearchResult;
 import org.junit.Test;
 
@@ -24,4 +25,22 @@ public class BingJsonParserTest {
         assertEquals("https://en.wikipedia.org/wiki/Caving", result.getUrl());
     }
 
+    @Test
+    public void parseValidEmptyResults() throws Exception {
+        String jsonResponse = "{\"d\":{\"results\":[]}}";
+
+        List<SearchResult> serp = BingJsonParser.parse(jsonResponse);
+        assertEquals(0, serp.size());
+    }
+
+    @Test (expected = JsonParseRuntimeException.class)
+    public void parseEmptyObject() throws Exception {
+        String jsonResponse = "{}";
+        BingJsonParser.parse(jsonResponse);
+    }
+
+    @Test (expected = JsonParseRuntimeException.class)
+    public void parseNullObject() throws Exception {
+        BingJsonParser.parse(null);
+    }
 }

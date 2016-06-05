@@ -1,5 +1,6 @@
 package com.blacky.sa.crawler.parser;
 
+import com.blacky.sa.exception.JsonParseRuntimeException;
 import com.blacky.sa.model.SearchResult;
 import org.junit.Test;
 
@@ -22,6 +23,17 @@ public class GoogleJsonParserTest {
         assertEquals("Google", result.getSearchEngine());
         assertEquals("Urban Dictionary: spelunking", result.getTitle());
         assertEquals("http://www.urbandictionary.com/define.php?term=spelunking", result.getUrl());
+    }
+
+    @Test
+    public void parseEmptyResults() throws Exception {
+        List<SearchResult> serp = GoogleJsonParser.parse("{}");
+        assertEquals(0, serp.size());
+    }
+
+    @Test (expected = JsonParseRuntimeException.class)
+    public void parseNullObject() throws Exception {
+        GoogleJsonParser.parse(null);
     }
 
 }
