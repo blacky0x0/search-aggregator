@@ -3,7 +3,10 @@ package com.blacky.sa.strategy;
 import com.blacky.sa.model.SearchResult;
 import java.util.*;
 
-public class NaturalOrderAggregationStrategy implements AggregationStrategy{
+/**
+ * SERP's objects are sorted by their position parameter.
+ */
+public class NaturalOrderAggregationStrategy implements AggregationStrategy {
 
     @Override
     public List<SearchResult> aggregate(List<List<SearchResult>> serps) {
@@ -19,5 +22,4 @@ public class NaturalOrderAggregationStrategy implements AggregationStrategy{
 
         return resultList;
     }
-
 }

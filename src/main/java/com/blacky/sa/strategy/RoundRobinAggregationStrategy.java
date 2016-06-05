@@ -7,6 +7,10 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * Every SERP is placed one after another.
+ * And the returned list has "Round Robin" behaviour, so iterating over it could be potentially infinitely.
+ */
 public class RoundRobinAggregationStrategy implements AggregationStrategy {
 
     @Override

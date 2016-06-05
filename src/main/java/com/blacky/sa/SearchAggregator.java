@@ -13,6 +13,14 @@ import java.util.logging.Logger;
 
 public class SearchAggregator {
 
+    /**
+     * Method combines SERP results from given search engines into single list.
+     *
+     * @param searchPhrase - phrase to be searched in any search engine
+     * @param searchEngineList - list of crawlers
+     * @param aggregationStrategy - strategy to be applied to combine different SERP's lists
+     * @return - SERP sorted by any strategy
+     */
     public static List<SearchResult> searchPhrase(String searchPhrase,
                              List<Crawler> searchEngineList,
                              AggregationStrategy aggregationStrategy) {
