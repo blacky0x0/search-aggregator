@@ -1,11 +1,9 @@
 package com.blacky.sa.crawler;
 
-import com.blacky.sa.model.SearchResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -18,17 +16,17 @@ public class GoogleCrawlerTest {
         String apiKey = "api_key";
         String cx = "custom_search_engine_id";
         GoogleCrawler spy = spy(new GoogleCrawler(apiKey, cx));
-        String jsonResponse = "{\"items\":[{\"title\":\"Urban Dictionary: spelunking\",\"link\": \"http://www.urbandictionary.com/define.php?term=spelunking\"}]}";
+        String jsonResponse = "{\"items\":[]}";
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 
         doReturn(jsonResponse).when(spy).getResponse(any());
+        spy.search("Always pass on what you have learned");
+        verify(spy).getResponse(captor.capture());
 
-        List<SearchResult> serp = spy.search("what is spelunking");
-        SearchResult result = serp.get(0);
+        String apiUrl = "https://www.googleapis.com/customsearch/v1";
+        String params = "?key=api_key&cx=custom_search_engine_id&num=10";
+        String formedUrl = apiUrl.concat(params.concat("&q=%27Always+pass+on+what+you+have+learned%27"));
 
-        assertEquals(1, result.getPosition());
-        assertEquals("Google", result.getSearchEngine());
-        assertEquals("Urban Dictionary: spelunking", result.getTitle());
-        assertEquals("http://www.urbandictionary.com/define.php?term=spelunking", result.getUrl());
+        assertEquals(formedUrl, captor.getValue());
     }
-
 }

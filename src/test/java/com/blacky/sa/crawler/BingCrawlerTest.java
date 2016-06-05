@@ -1,13 +1,11 @@
 package com.blacky.sa.crawler;
 
-import com.blacky.sa.model.SearchResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -17,17 +15,17 @@ public class BingCrawlerTest {
     public void parseValidJsonResponse() throws Exception {
         String apiKey = "api_key";
         BingCrawler spy = spy(new BingCrawler(apiKey));
-        String jsonResponse = "{\"d\":{\"results\":[{\"Title\":\"Caving - Wikipedia\",\"Url\":\"https://en.wikipedia.org/wiki/Caving\"}]}}";
+        String jsonResponse = "{\"d\":{\"results\":[]}}";
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 
         doReturn(jsonResponse).when(spy).getResponse(any());
+        spy.search("Patience you must have");
+        verify(spy).getResponse(captor.capture());
 
-        List<SearchResult> serp = spy.search("what is spelunking");
-        SearchResult result = serp.get(0);
+        String apiUrl = "https://api.datamarket.azure.com/Bing/Search/Web";
+        String params = "?$top=10&$skip=0&$format=JSON";
+        String formedUrl = apiUrl.concat(params.concat("&Query=%27Patience+you+must+have%27"));
 
-        assertEquals(1, result.getPosition());
-        assertEquals("Bing", result.getSearchEngine());
-        assertEquals("Caving - Wikipedia", result.getTitle());
-        assertEquals("https://en.wikipedia.org/wiki/Caving", result.getUrl());
+        assertEquals(formedUrl, captor.getValue());
     }
-
 }
