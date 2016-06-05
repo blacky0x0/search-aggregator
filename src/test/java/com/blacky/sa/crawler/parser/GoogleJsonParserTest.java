@@ -26,6 +26,12 @@ public class GoogleJsonParserTest {
     }
 
     @Test
+    public void parseValidEmptyResults() throws Exception {
+        List<SearchResult> serp = GoogleJsonParser.parse("{\"searchInformation\":{\"totalResults\":\"0\"}}");
+        assertEquals(0, serp.size());
+    }
+
+    @Test (expected = JsonParseRuntimeException.class)
     public void parseEmptyResults() throws Exception {
         List<SearchResult> serp = GoogleJsonParser.parse("{}");
         assertEquals(0, serp.size());

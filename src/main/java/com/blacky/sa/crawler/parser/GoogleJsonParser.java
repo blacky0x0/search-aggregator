@@ -13,7 +13,9 @@ public class GoogleJsonParser {
 
         try {
             JSONObject json = new JSONObject(jsonString);
-            if (json.isNull("items")) return serp;
+            if (json.isNull("items") && "0".equals(json.getJSONObject("searchInformation").getString("totalResults"))) {
+                return serp;
+            }
 
             JSONArray items = json.getJSONArray("items");
 
